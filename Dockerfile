@@ -16,7 +16,7 @@ FROM eclipse-temurin:17-jdk-jammy
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
 # Copie du fichier .jar (qui contient votre dossier resources/bin/yt-dlp à l'intérieur)
-COPY --from=build /target/*.jar app.jar
+COPY --from=build /YoutubeDownloadApp version2/target/*.jar app.jar
 
 EXPOSE 8080
 
