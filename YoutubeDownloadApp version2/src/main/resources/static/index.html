@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>YouTube Downloader - Mode Manuel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 30px;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin: auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn-blue {
+            background-color: #007bff;
+        }
+
+        .btn-green {
+            background-color: #28a745;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Affichage terminal pour la liste des formats */
+        #formats-display {
+            background: #222;
+            color: #00ff00;
+            padding: 15px;
+            font-family: monospace;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            height: 300px;
+            overflow-y: scroll;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* Section de téléchargement */
+        #download-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #ddd;
+            display: none;
+        }
+
+        /* Stats Box */
+        .stats-box {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            background: #e9ecef;
+            padding: 12px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #17a2b8;
+        }
+
+        /* Barre de progression */
+        .progress-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 18px;
+            background-color: #28a745;
+            text-align: center;
+            line-height: 18px;
+            color: white;
+            border-radius: 4px;
+            font-size: 11px;
+            transition: width 0.1s ease;
+        }
+
+        #status-message {
+            margin-top: 10px;
+            font-style: italic;
+            color: #6c757d;
+        }
+
+        .description-section {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f1f3f5;
+            border-left: 5px solid #007bff;
+            border-radius: 4px;
+        }
+
+        .description-section h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+
+        .description-section ol {
+            padding-left: 20px;
+        }
+
+        .description-section li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        .warning-box code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+            color: #bd4147;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Téléchargeur YouTube Avancé (yt-dlp)</h2>
+
+        <div class="form-group">
+            <label for="url">Lien de la vidéo YouTube :</label>
+            <input type="text" id="url" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+        <button class="btn btn-blue" onclick="getFormats()">1. Analyser la vidéo</button>
+
+        <div id="formats-display">Chargement des formats...</div>
+
+        <div id="download-section">
+            <h3>Configuration du Téléchargement</h3>
+
+            <div class="form-group">
+                <label for="formatId">Entrez l'ID du format choisi (ex: 140, 136, 18...) :</label>
+                <input type="text" id="formatId" placeholder="Ex: 136">
+            </div>
+
+            <div class="form-group">
+                <label for="path">Dossier de destination (Ubuntu) :</label>
+                <input type="text" id="path" value="/home/richel/Musique">
+            </div>
+
+            <button class="btn btn-green" onclick="startDownload()">2. Lancer le téléchargement de cet ID</button>
+
+            <div id="status-message"></div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+
+            <div class="stats-box">
+                <div>Taille: <span class="stat-value" id="totalSize">-</span></div>
+                <div>Vitesse: <span class="stat-value" id="speed">-</span></div>
+                <div>Restant: <span class="stat-value" id="eta">-</span></div>
+            </div>
+        </div>
+
+        <div class="description-section">
+            <h3>ℹ️ Comment fonctionne le téléchargement en détail ?</h3>
+            <p>Cette application utilise le moteur <code>yt-dlp</code> pour extraire directement les flux serveurs de YouTube.
+                Le processus se déroule en deux étapes clés :</p>
+        <!-- Richel Kembou Fosso-->
+            <ol>
+                <li><strong>L'analyse des flux (Étape 1) :</strong> En collant votre lien et en cliquant sur Analyser, le
+                    serveur interroge la vidéo. YouTube sépare presque toujours les flux de haute qualité en deux fichiers
+                    distincts : un fichier pour l'image seule, et un fichier pour le son seul.</li>
+                <li><strong>Le téléchargement ciblé (Étape 2) :</strong> La console verte vous affiche la liste de ces flux.
+                    Repérez la colonne <code>VCODEC</code> et <code>ACODEC</code> pour faire votre choix, puis renseignez l'ID
+                    correspondant.</li>
+            </ol>
+        
+            <div class="warning-box">
+                <strong>⚠️ Attention importante concernant les formats "video only" :</strong>
+                <p>Si vous choisissez un ID de haute résolution (comme 1080p ou 720p), vous remarquerez souvent la mention
+                    <code>video only</code> dans la description du format. Si vous téléchargez cet ID seul, <strong>votre vidéo
+                        finale n'aura aucun son</strong>.</p>
+                <p><strong>La solution :</strong> Vous devez combiner l'ID de la vidéo avec un ID de flux audio (marqué
+                    <code>audio only</code>, comme l'ID 140 ou 251).</p>
+                <p>Dans le champ de saisie de l'ID, liez-les simplement avec le symbole <strong><code>+</code></strong>. <br>
+                    <em>Exemple :</em> Écrire <code>136+140</code> va télécharger la vidéo HD (136) ET l'audio (140).
+                    L'application utilisera ensuite <strong>FFmpeg</strong> en arrière-plan pour fusionner automatiquement les
+                    deux en un seul fichier complet et propre.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="index.js">
+
+    </script>
+</body>
+
+</html>
