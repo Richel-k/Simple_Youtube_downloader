@@ -2,10 +2,10 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 COPY . .
 # AJOUTEZ CETTE LIGNE (Remplacez "LeNomDeVotreSousDossier" par le vrai nom du dossier)
-WORKDIR /Simple_Youtube_downloader
+WORKDIR /YoutubeDownloadApp Version2
 
 # COMMANDE TEMPORAIRE : "ls -la" va lister tous les fichiers dans la console Render
-RUN ls -la
+#RUN ls -la
 
 RUN mvn clean package -DskipTests
 
