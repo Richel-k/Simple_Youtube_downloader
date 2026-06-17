@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:8080/api";
+const baseUrl = "https://simple-youtube-downloader.onrender.com/api";
 
 // Appelle le point d'accès -F pour lister les formats
 function getFormats() {
