@@ -2,7 +2,7 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 COPY . .
 # AJOUTEZ CETTE LIGNE (Remplacez "LeNomDeVotreSousDossier" par le vrai nom du dossier)
-WORKDIR /YoutubeDownloadApp version2
+WORKDIR /YoutubeDownloadApp_version2
 
 # COMMANDE TEMPORAIRE : "ls -la" va lister tous les fichiers dans la console Render
 #RUN ls -la
@@ -16,7 +16,7 @@ FROM eclipse-temurin:17-jdk-jammy
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
 # Copie du fichier .jar (qui contient votre dossier resources/bin/yt-dlp à l'intérieur)
-COPY --from=build /YoutubeDownloadApp version2/target/*.jar app.jar
+COPY --from=build /YoutubeDownloadApp_version2/target/*.jar app.jar
 
 EXPOSE 8080
 
