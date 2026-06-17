@@ -37,17 +37,38 @@ public class DownloadController {
      * Utilitaire pour localiser yt-dlp dans le projet et s'assurer qu'il est
      * exécutable
      */
-    private String getCustomYtDlpPath() throws Exception {
-        Resource resource = resourceLoader.getResource("classpath:bin/yt-dlp");
-        File ytDlpFile = resource.getFile();
+    // private String getCustomYtDlpPath() throws Exception {
+    //     Resource resource = resourceLoader.getResource("classpath:bin/yt-dlp");
+    //     File ytDlpFile = resource.getFile();
 
-        // Sécurité Linux : s'assurer que le fichier est bien considéré comme un
-        // exécutable par le système
-        if (!ytDlpFile.canExecute()) {
-            ytDlpFile.setExecutable(true);
+    //     // Sécurité Linux : s'assurer que le fichier est bien considéré comme un
+    //     // exécutable par le système
+    //     if (!ytDlpFile.canExecute()) {
+    //         ytDlpFile.setExecutable(true);
+    //     }
+
+    //     return ytDlpFile.getAbsolutePath();
+    // }
+
+    private String getCustomYtDlpPath() throws Exception {
+        // 1. On définit un emplacement temporaire sur le serveur Linux de Render
+        File tempYtDlp = new File("/tmp/yt-dlp");
+
+        // 2. Si le fichier n'a pas encore été extrait, on le copie depuis le JAR
+        if (!tempYtDlp.exists()) {
+            Resource resource = resourceLoader.getResource("classpath:bin/yt-dlp");
+            try (java.io.InputStream is = resource.getInputStream()) {
+                java.nio.file.Files.copy(is, tempYtDlp.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            }
         }
 
-        return ytDlpFile.getAbsolutePath();
+        // 3. On force les droits d'exécution (chmod +x) pour Render
+        if (!tempYtDlp.canExecute()) {
+            tempYtDlp.setExecutable(true);
+        }
+
+        // 4. On retourne le chemin du fichier prêt à l'emploi
+        return tempYtDlp.getAbsolutePath();
     }
 
     /**
