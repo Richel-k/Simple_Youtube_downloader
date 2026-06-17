@@ -13,7 +13,7 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jdk-jammy
 
 # On installe UNIQUEMENT ffmpeg sur le serveur Render (obligatoire pour les fusions d'ID)
-RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y ffmpeg python3 && rm -rf /var/lib/apt/lists/*
 
 # Copie du fichier .jar (qui contient votre dossier resources/bin/yt-dlp à l'intérieur)
 COPY --from=build /YoutubeDownloadApp_version2/target/*.jar app.jar
