@@ -4,6 +4,9 @@ COPY . .
 # AJOUTEZ CETTE LIGNE (Remplacez "LeNomDeVotreSousDossier" par le vrai nom du dossier)
 WORKDIR /Simple_Youtube_downloader
 
+# COMMANDE TEMPORAIRE : "ls -la" va lister tous les fichiers dans la console Render
+RUN ls -la
+
 RUN mvn clean package -DskipTests
 
 # Étape 2 : Environnement d'exécution
