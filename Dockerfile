@@ -1,6 +1,9 @@
 # Étape 1 : Build de l'application avec Maven
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 COPY . .
+# AJOUTEZ CETTE LIGNE (Remplacez "LeNomDeVotreSousDossier" par le vrai nom du dossier)
+WORKDIR /Simple_Youtube_downloader
+
 RUN mvn clean package -DskipTests
 
 # Étape 2 : Environnement d'exécution
