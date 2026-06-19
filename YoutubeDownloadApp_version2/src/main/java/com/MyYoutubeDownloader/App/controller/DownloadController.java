@@ -80,7 +80,7 @@ public class DownloadController {
         try {
             String ytDlpPath = getCustomYtDlpPath(); // Récupère le chemin interne automatiquement
 
-            ProcessBuilder builder = new ProcessBuilder(ytDlpPath, "-F", url);
+            ProcessBuilder builder = new ProcessBuilder(ytDlpPath,"--cookies", "./cookies.txt", "-F", url);
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
@@ -118,6 +118,8 @@ public class DownloadController {
 
                 List<String> command = new ArrayList<>();
                 command.add(ytDlpPath); // Utilisation du binaire embarqué
+                command.add("--cookies");
+                command.add("./cookies.txt");
                 command.add("-f");
                 command.add(formatId);
                 command.add("-P");
