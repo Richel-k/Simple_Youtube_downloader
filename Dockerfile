@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y ffmpeg python3 nodejs && rm -rf /var/li
 # Copie du fichier .jar (qui contient votre dossier resources/bin/yt-dlp à l'intérieur)
 COPY --from=build /YoutubeDownloadApp_version2/target/*.jar app.jar
 
+COPY --from=build /YoutubeDownloadApp_version2/cookies.txt /cookies.txt
+
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
